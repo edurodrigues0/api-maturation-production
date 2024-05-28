@@ -1,0 +1,12 @@
+#Dependecies
+node_modules
+
+#Environment
+.env
+.env.test
+
+#Database
+prisma/*.db
+
+#Build
+build

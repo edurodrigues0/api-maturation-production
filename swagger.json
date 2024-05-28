@@ -1,0 +1,578 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Maturation Production API.",
+    "description": "This is the production server for the Laticinio Scala maturation sector",
+    "contact": {
+      "email": "edurodriguesdev1@gmail.com"
+    }
+  },
+  "host": "localhost:3333",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "admin",
+      "description": "Endpoints of admin"
+    },
+    {
+      "name": "colaborators",
+      "description": "Endpoints of colaborators"
+    },
+    {
+      "name": "productions",
+      "description": "Endpoints of productions"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/admin": {
+      "post": {
+        "summary": "Create admin",
+        "description": "This route is responsible for creating the admin",
+        "tags": ["admin"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object needs to be create admin",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Admin"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The admin ID.",
+                          "example": "04e70a78-26a2-4a44-9b35-69edc08724a1"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The admin name.",
+                          "example": "Eduardo Rodrigues"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The admin email.",
+                          "example": "eduardorodrigues@example.com"
+                        },
+                        "createdAt": {
+                          "type": "Date",
+                          "description": "The date of creation admin.",
+                          "example": "2024-05-12T23:50:21.817Z"
+                        },
+                        "updatedAt": {
+                          "type": "Date",
+                          "description": "The date of updated admin.",
+                          "example": "2024-05-12T23:50:21.817Z"
+                        }
+                      }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Please insert name, email and password."
+          },
+          "409": {
+            "description": "E-mail already in use."
+          }
+        }
+      }
+    },
+    "/admin/sessions": {
+      "post": {
+        "description": "This route is responsible for authenticated",
+        "tags": ["admin"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object needs to be authenticated",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Auth"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Session created"
+          },
+          "404": {
+            "description": "Invalid credentials."
+          }
+        }
+      }
+    },
+    "/colaborators": {
+      "post": {
+        "description": "This route is responsible for create a colaborator",
+        "tags": ["colaborators"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object needs to be create colaborator",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Colaborator"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Please insert registration and name."
+          },
+          "409": {
+            "description": "Colaborator already exists."
+          }
+        }
+      },
+      "get": {
+        "description": "This route fetch colaboratos and paginatation",
+        "tags": ["colaborators"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "number",
+            "description": "Page for paginatation of colaborators",
+            "example": 1
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string",
+            "description": "Search for specific name colaborator"
+          },
+          {
+            "name": "colaboratorId",
+            "in": "query",
+            "type": "number",
+            "description": "Search for specific registrarion colaborator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/colaborators/{colaboratorId}": {
+      "put": {
+        "description": "This route for edited colaborator",
+        "tags": ["colaborators"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "colaboratorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object needs to be edited colaborator",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/EditColaborator"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Colaborator edited."
+          },
+          "400": {
+            "description": "Insert any data."
+          },
+          "404": {
+            "description": "Colaborator not exists."
+          },
+          "409": {
+            "description": "Colaborator with same id"
+          }
+        }
+      },
+      "get": {
+        "description": "This route for get details of colaborator",
+        "tags": ["colaborators"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "colaboratorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Colaborator not exists."
+          }
+        }
+      }
+    },
+    "/productions": {
+      "post": {
+        "description": "This route is responsible for create a production",
+        "tags": ["productions"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object needs to be create production",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Production"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Production created"
+          },
+          "404": {
+            "description": "Colaborator not exists."
+          },
+          "405": {
+            "description": "Date not allowed."
+          },
+          "409": {
+            "description": "Production of the day has already exists."
+          }
+        }
+      },
+      "get": {
+        "description": "This route fetch production and paginatation",
+        "tags": ["productions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "number",
+            "description": "Page for paginatation of colaborators",
+            "example": 1
+          },
+          {
+            "name": "realizedIn",
+            "in": "query",
+            "type": "string",
+            "description": "Search for specific date",
+            "example": "2024/05/21"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/productions/{productionId}": {
+      "get": {
+        "description": "This route is resposible for get details production",
+        "tags": ["productions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "productionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Production not exits."
+          }
+        }
+      },
+      "put": {
+        "description": "This route is resposible for edited production",
+        "tags": ["productions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "productionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "bearer {token}",
+            "example": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object needs to be edit production",
+            "schema": {
+              "$ref": "#/components/schemas/EditProduction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Production edited"
+          },
+          "404": {
+            "description": "Production not exits."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Admin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The admin name.",
+            "example": "Eduardo Rodrigues"
+          },
+          "email": {
+            "type": "string",
+            "description": "The admin email.",
+            "example": "eduardorodrigues@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The admin password.",
+            "example": "123456"
+          }
+        }
+      },
+      "Auth": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email cadastred.",
+            "example": "eduardorodrigues@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password cadastred.",
+            "example": "123456"
+          }
+        }
+      },
+      "Colaborator": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "This is the only registration in the company",
+            "example": 1166
+          },
+          "name": {
+            "type": "string",
+            "description": "Colaborator's name",
+            "example": "Eduardo Rodrigues"
+          }
+        }
+      },
+      "EditColaborator": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "This is the only registration in the company",
+            "example": 1166
+          },
+          "name": {
+            "type": "string",
+            "description": "Colaborator's name",
+            "example": "Eduardo Rodrigues"
+          },
+          "isOnSector": {
+            "type": "boolean",
+            "description": "Field to inform whether the employee is in the sector or has left",
+            "example": true
+          }
+        }
+      },
+      "Production": {
+        "type": "object",
+        "properties": {
+          "colaboratorId": {
+            "type": "number",
+            "description": "This is a colaborator id for relation",
+            "example": 1166
+          },
+          "activitiesArray": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "this is a activities on sector code",
+            "example": ["1","2","3"]
+          },
+          "litersOfProduct": {
+            "type": "number",
+            "description": "This is the number of products spent in liters",
+            "example": 9
+          },
+          "quantityProduced": {
+            "type": "number",
+            "description": "Quantity produced by quantity liters",
+            "example": 1080
+          },
+          "realizedIn": {
+            "type": "Date",
+            "description": "Date of produced in sector",
+            "example": "2024-05-23T00:00:00.000Z"
+          }
+        }
+      },
+      "EditProduction": {
+        "type": "object",
+        "properties": {
+          "activitiesArray": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "this is a activities on sector code",
+            "example": ["1","2","3"]
+          },
+          "litersOfProduct": {
+            "type": "number",
+            "description": "This is the number of products spent in liters",
+            "example": 9
+          },
+          "quantityProduced": {
+            "type": "number",
+            "description": "Quantity produced by quantity liters",
+            "example": 1080
+          },
+          "realizedIn": {
+            "type": "Date",
+            "description": "Date of produced in sector",
+            "example": "2024-05-23T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
