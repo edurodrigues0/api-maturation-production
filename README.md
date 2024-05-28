@@ -17,7 +17,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 
 ```bash
 # Clone este repositorio
-$ git clone <http://github.com/example/nlw>
+$ git clone https://github.com/edurodrigues0/api-maturation-production.git
 
 # Acesse a pasta do projeto no terminal/cmd
 $ cd api-maturation-production
