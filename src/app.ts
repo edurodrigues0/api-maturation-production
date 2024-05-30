@@ -6,8 +6,8 @@ import swaggerUi from 'swagger-ui-express'
 import adimRoutes from './routes/admin-routes'
 import productionRoutes from './routes/production-routes'
 import colaboratorRoutes from './routes/colaborators-routes'
+import metricsRoutes from './routes/metrics-routes'
 import swaggerDocument from '../swagger.json'
-import metricsRoutes from './routes/metrics-routers'
 
 export const app = express()
 

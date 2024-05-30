@@ -7,7 +7,7 @@ import { ensureAuthenticated } from '../middlewares/ensure-authenticated-middlew
 
 const metricsRoutes = Router()
 
-// metricsRoutes.use(ensureAuthenticated)
+metricsRoutes.use(ensureAuthenticated)
 
 metricsRoutes.get('/metrics/consume-on-last-day', getConsumeOnLastDay)
 metricsRoutes.get('/metrics/consume-on-last-month', getConsumeOnLastMonth)
