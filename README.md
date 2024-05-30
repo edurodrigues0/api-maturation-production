@@ -63,4 +63,4 @@ Mencione todos aqueles que ajudaram a levantar o projeto desde o seu início
 
 ## 📄 Licença
 
-[LICENSE.md](https://github.com/usuario/projeto/licenca) para detalhes.
+[LICENSE.md](https://github.com/edurodrigues0/api-maturation-production/blob/main/LICENSE.md) para detalhes.
