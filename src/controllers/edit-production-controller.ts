@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { Request, Response } from 'express'
 
-import { prisma } from '../lib/prisma'
 import { AppError } from '../utils/errors/AppError'
+import { PrismaProductionsRepository } from '../repositories/prisma/productions-repository'
 
 export async function editProduction(request: Request, response: Response) {
   const editProductionParamsSchema = z.object({
@@ -18,27 +18,19 @@ export async function editProduction(request: Request, response: Response) {
 
   const { productionId } = editProductionParamsSchema.parse(request.params)
   const { activitiesArray, litersOfProduct, quantityProduced, realizedIn } = editProductionBodySchema.parse(request.body)
+  const { edit, findById } = PrismaProductionsRepository()
 
-  const production = await prisma.production.findUnique({
-    where: {
-      id: productionId,
-    }
-  })
+  const production = await findById(productionId)
 
   if (!production) {
     return AppError('Production not exists', 404, response)
   }
 
-  await prisma.production.update({
-    where: {
-      id: productionId,
-    },
-    data: {
-      activities: activitiesArray?.join(','),
-      litersOfProduct,
-      quantityProduced,
-      realizedIn
-    }
+  await edit(productionId, {
+    activities: activitiesArray?.join(','),
+    litersOfProduct,
+    quantityProduced,
+    realizedIn
   })
 
   response.status(200).json({

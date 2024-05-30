@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { Request, Response } from 'express'
 
-import { prisma } from '../lib/prisma'
 import { AppError } from '../utils/errors/AppError'
+import { PrismaColaboratorsRepository } from '../repositories/prisma/colaborators-repository'
 
 export async function editColaborator(request: Request, response: Response) {
   const editColaboratorParamsSchema = z.object({
@@ -17,25 +17,18 @@ export async function editColaborator(request: Request, response: Response) {
 
   const { colaboratorId } = editColaboratorParamsSchema.parse(request.params)
   const { id, name, isOnSector } = editColaboratorBodySchema.parse(request.body)
+  const { findById, edit } = PrismaColaboratorsRepository()
 
   if (!name && !id && isOnSector === undefined) {
     return AppError('Insert any data.', 400, response)
   }
 
-  const colaborator = await prisma.colaborator.findUnique({
-    where: {
-      id: colaboratorId
-    }
-  })
+  const colaborator = await findById(colaboratorId)
 
   let colaboratorWithSameId = null
 
   if (id !== undefined) {
-    colaboratorWithSameId = await prisma.colaborator.findUniqueOrThrow({
-      where: {
-        id: id !== undefined ? id : undefined,
-      }
-    })
+    colaboratorWithSameId = await findById(id)
   }
 
   if (!colaborator) {
@@ -46,16 +39,7 @@ export async function editColaborator(request: Request, response: Response) {
     return AppError('Colaborator with same id.', 409, response)
   }
 
-  await prisma.colaborator.update({
-    where: {
-      id: colaboratorId,
-    },
-    data: {
-      id,
-      name,
-      isOnSector,
-    }
-  })
+  await edit(colaboratorId, { id, name, isOnSector })
 
   response.status(200).json({
     message: 'Colaborator edited.'

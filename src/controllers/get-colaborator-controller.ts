@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { Request, Response } from 'express'
 
-import { prisma } from '../lib/prisma'
 import { AppError } from '../utils/errors/AppError'
+import { PrismaColaboratorsRepository } from '../repositories/prisma/colaborators-repository'
 
 export async function getColaborator(request: Request, response: Response) {
   const getColaboratorParamsSchema = z.object({
@@ -10,22 +10,13 @@ export async function getColaborator(request: Request, response: Response) {
   })
 
   const { colaboratorId } = getColaboratorParamsSchema.parse(request.params)
+  const { get } = PrismaColaboratorsRepository()
 
-  const user = await prisma.colaborator.findUnique({
-    where: {
-      id: colaboratorId,
-    }
-  })
+  const colaborator = await get(colaboratorId)
 
-  if (!user) {
+  if (!colaborator) {
     return AppError('Colaborator not exists.', 404, response)
   }
-
-  const colaborator = await prisma.colaborator.findUnique({
-    where: {
-      id: colaboratorId,
-    },
-  })
 
   response.status(200).json({
     colaborator,

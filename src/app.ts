@@ -7,6 +7,7 @@ import adimRoutes from './routes/admin-routes'
 import productionRoutes from './routes/production-routes'
 import colaboratorRoutes from './routes/colaborators-routes'
 import swaggerDocument from '../swagger.json'
+import metricsRoutes from './routes/metrics-routers'
 
 export const app = express()
 
@@ -16,12 +17,12 @@ app.use(cors({
 }))
 
 app.use(express.json())
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use(adimRoutes)
 app.use(colaboratorRoutes)
 app.use(productionRoutes)
-
-app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use(metricsRoutes)
 
 app.use((error: Error, _request: Request, response: Response, _next: NextFunction) => {
   if (error instanceof ZodError) {

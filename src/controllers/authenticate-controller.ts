@@ -3,9 +3,10 @@ import { compare } from 'bcrypt'
 import { Request, Response } from 'express'
 import { sign } from 'jsonwebtoken'
 
-import { prisma } from '../lib/prisma'
 import { AppError } from '../utils/errors/AppError'
 import { auth } from '../configs/auth'
+import { PrismaAdminRepository } from '../repositories/prisma/admin-repository'
+
 
 export async function authenticate(request: Request, response: Response) {
   const authenticateBodySchema = z.object({
@@ -19,13 +20,10 @@ export async function authenticate(request: Request, response: Response) {
     return AppError('Please insert email or password', 400, response)
   }
 
-  const admin = await prisma.admin.findUnique({
-    where: {
-      email,
-    }
-  })
+  const { findByEmail } = PrismaAdminRepository()
 
-  
+  const admin = await findByEmail(email)
+
   if (!admin) {
     return AppError('Invalid credentials.', 404, response)
   }

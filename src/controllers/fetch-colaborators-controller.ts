@@ -1,8 +1,7 @@
 import { z } from 'zod'
 import { Request, Response } from 'express'
 
-import { prisma } from '../lib/prisma'
-import { AppError } from '../utils/errors/AppError'
+import { PrismaColaboratorsRepository } from '../repositories/prisma/colaborators-repository'
 
 export async function fetchColaborators(request: Request, response: Response) {
   const fetchColaboratorsParamsSchema = z.object({
@@ -16,39 +15,9 @@ export async function fetchColaborators(request: Request, response: Response) {
 
   const { page } = fetchColaboratorsParamsSchema.parse(request.params)
   const { colaboratorId, name } = fetchColaboratorsQuerySchema.parse(request.query)
+  const { fetch } = PrismaColaboratorsRepository()
 
-  const colaborators = await prisma.colaborator.findMany({
-    select: {
-      id: true,
-      name: true,
-      createdAt: true,
-    },
-    where: {
-      isOnSector: true,
-      id: colaboratorId,
-      name: {
-        contains: name,
-      },
-    },
-    orderBy: {
-      name: 'asc',
-    },
-    take: 10,
-    skip: (page - 1) * 10
-  })
-
-  const totalItems = await prisma.colaborator.count()
-
-  const totalPages = Math.ceil(totalItems / 10)
-  
-  const itemsPerPage = page === totalPages ? totalItems % 10 : 10
-
-  const pagination = {
-    currentPage: page,
-    totalItems,
-    totalPages,
-    itemsPerPage
-  }
+  const {colaborators, pagination } = await fetch(page, { colaboratorId, name })
 
   response.status(200).json({
     colaborators,
