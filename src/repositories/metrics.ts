@@ -1,22 +1,19 @@
-interface Consume {
-  id: string
-  sumOfLiters: number
-  totalOfPieces: number
-  month: number
-  year: number
-  length: number
+export interface Consume {
+  id: string;
+  sumOfLitersOfAlcool: number;
+  sumOfLitersOfGlueFilm: number;
+  totalOfPiecesOfAlcool: number;
+  totalOfPiecesOfGlueFilm: number;
+  month: number;
+  year: number;
+  totalRecordsOfAlcool: number;
+  totalRecordsOfGlueFilm: number;
 }
 
 export interface MetricsRepository {
-  consumeOnLastDay(): Promise<{
-    consumeAverangeOnLastDay: number,
-    totalOfPiecesOnLastDay: number
-  }>
+  consumeOnLastDay(): Promise<Consume>
   
-  consumeOnLastMonth(): Promise<{
-    consumeAverangeOnLastMonth: number,
-    totalOfPiecesOnLastMonth: number
-  }>
+  consumeOnLastMonth(): Promise<Consume>
 
   consumeOnLastSixMonths(): Promise<Consume[]>
   consumeOnLastTwelveMonths(): Promise<Consume[]>

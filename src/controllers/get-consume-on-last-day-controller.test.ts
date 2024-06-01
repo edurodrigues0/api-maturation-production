@@ -16,6 +16,8 @@ describe("[e2e] Metrics on last day", () => {
 
     const currentDate = new Date()
     const yesterday = subDays(currentDate, 1)
+    const month = yesterday.getMonth() + 1
+    const year = yesterday.getFullYear()
 
     await prisma.colaborator.create({
       data: {
@@ -26,7 +28,7 @@ describe("[e2e] Metrics on last day", () => {
 
     await prisma.production.create({
       data: {
-        activities: '1,2,3',
+        activities: '1,2,7',
         litersOfProduct: 10000,
         quantityProduced: 600,
         realizedIn: yesterday,
@@ -53,8 +55,14 @@ describe("[e2e] Metrics on last day", () => {
 
     expect(response.statusCode).toEqual(200)
     expect(metricsOnLastDay).toEqual(expect.objectContaining({
-      consumeAverangeOnLastDay: 7000,
-      totalOfPiecesOnLastDay: 1200,
+      sumOfLitersOfAlcool: 10000,
+      sumOfLitersOfGlueFilm: 4000,
+      totalOfPiecesOfAlcool: 600,
+      totalOfPiecesOfGlueFilm: 600,
+      month,
+      year,
+      totalRecordsOfAlcool: 1,
+      totalRecordsOfGlueFilm: 1,
     }))
   })
 })

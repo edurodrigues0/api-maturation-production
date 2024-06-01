@@ -2,14 +2,14 @@ import { lastDayOfMonth as lastDayOfMonthFns, setDefaultOptions, startOfMonth, s
 
 import { prisma } from '../../lib/prisma'
 import { formatProductions } from '../../utils/format-productions-list'
-import { MetricsRepository } from '../metrics'
+import { MetricsRepository, Consume } from '../metrics'
 
 export const PrismaMetricsRepository = (): MetricsRepository => {
+  const activieNumberAcool = '7'
+  const activieNumberGlueFilm = '3'
+
   return {
-    async consumeOnLastDay(): Promise<{
-      consumeAverangeOnLastDay: number,
-      totalOfPiecesOnLastDay: number
-    }> {
+    async consumeOnLastDay(): Promise<Consume> {
       const currentDate = new Date()
 
       const yesterday = subDays(currentDate, 1)
@@ -29,22 +29,27 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
             gte: startOfYesterday,
             lte: endOfYesterday,
           },
+          OR: [
+            {
+              activities: {
+                contains: activieNumberAcool
+              }
+            },
+            {
+              activities: {
+                contains: activieNumberGlueFilm
+              }
+            }
+          ]
         }
       })
 
-      const consumeAverangeOnLastDay = productions.reduce((acc, production) => acc + production.litersOfProduct, 0) / productions.length
-      const totalOfPiecesOnLastDay = productions.reduce((acc, production) => acc + production.quantityProduced, 0)
+      const metricsOnLastDay = formatProductions(productions)
 
-      return {
-        consumeAverangeOnLastDay,
-        totalOfPiecesOnLastDay
-      }
+      return metricsOnLastDay[0]
     },
 
-    async consumeOnLastMonth(): Promise<{
-      consumeAverangeOnLastMonth: number,
-      totalOfPiecesOnLastMonth: number
-    }> {
+    async consumeOnLastMonth(): Promise<Consume> {
       const currentDate = new Date()
       const lastMonth = subMonths(currentDate, 1)
 
@@ -66,26 +71,12 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
         }
       })
 
-      const consumeAverangeOnLastMonth = productions
-      .reduce(
-        (acc, production) => acc 
-        + production.litersOfProduct, 0
-      ) / productions.length
+      const metricsOnLastMonth = formatProductions(productions)
 
-      const totalOfPiecesOnLastMonth = productions.reduce(
-        (acc, production) => acc 
-        + production.quantityProduced, 0
-      )
-
-      Number(consumeAverangeOnLastMonth.toFixed(2))
-      
-      return {
-        consumeAverangeOnLastMonth,
-        totalOfPiecesOnLastMonth
-      }
+      return metricsOnLastMonth[0]
     },
 
-    async consumeOnLastSixMonths() {
+    async consumeOnLastSixMonths(): Promise<Consume[]> {
       const currentDate = new Date()
       const lastSixMonths = startOfMonth(subMonths(currentDate, 5))
       lastSixMonths.setUTCHours(0, 0, 0, 0)
@@ -110,7 +101,7 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
       return consumeOnLastSixMonths
     },
 
-    async consumeOnLastTwelveMonths() {
+    async consumeOnLastTwelveMonths(): Promise<Consume[]> {
       const currentDate = new Date()
       const lastSixMonths = startOfMonth(subMonths(currentDate, 12))
       lastSixMonths.setUTCHours(0, 0, 0, 0)
