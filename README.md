@@ -47,8 +47,6 @@ $ npm run test
 
 ## 🛠️ Construído com
 
-Mencione as ferramentas que você usou para criar seu projeto
-
 * [Express](https://expressjs.com/pt-br/) - O framework web usado
 * [Prisma](https://www.prisma.io/) - ORM usado para o banco de dados
 * [Vitest](https://vitest.dev/guide/filtering) - Usado para fazer os testes e2e
@@ -56,8 +54,6 @@ Mencione as ferramentas que você usou para criar seu projeto
 * [Zod](https://zod.dev/) - Para validação de tipagem
 
 ## ✒️ Autores
-
-Mencione todos aqueles que ajudaram a levantar o projeto desde o seu início
 
 * **Eduardo Rodrigues** - *Trabalho Inicial* - [edurodrigues0](https://github.com/edurodrigues0)
 
