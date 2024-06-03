@@ -7,11 +7,11 @@ import { PrismaProductionsRepository } from '../repositories/prisma/productions-
 
 export async function createProduction(request: Request, response: Response) {
   const createProductionBodySchema = z.object({
-    colaboratorId: z.number().int().positive().min(3),
+    quantityProduced: z.number().int(),
+    litersOfProduct: z.number().max(60),
+    realizedIn: z.preprocess((arg) => new Date(arg as string), z.date()),
     activitiesArray: z.array(z.string()),
-    litersOfProduct: z.number().positive().min(0.5).max(60),
-    quantityProduced: z.number().int().positive(),
-    realizedIn: z.preprocess((arg) => new Date(arg as string), z.date())
+    colaboratorId: z.number().int().positive().min(3),
   })
 
   const { 

@@ -6,7 +6,6 @@ import {
 
 import { app } from '../app'
 import request from 'supertest'
-import { AppFactory } from '@expressots/core'
 import { prisma } from '../lib/prisma'
 import { createAndAuthenticate } from '../utils/test/create-and-authenticate'
 

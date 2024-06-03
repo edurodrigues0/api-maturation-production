@@ -11,7 +11,7 @@ export async function editProduction(request: Request, response: Response) {
   
   const editProductionBodySchema = z.object({
     activitiesArray: z.array(z.string()).optional(),
-    litersOfProduct: z.number().positive().min(0.5).max(60).optional(),
+    litersOfProduct: z.number().positive().max(60).optional(),
     quantityProduced: z.number().int().positive().optional(),
     realizedIn: z.preprocess((arg) => new Date(arg as string), z.date()).optional()
   })

@@ -12,7 +12,7 @@ import swaggerDocument from '../swagger.json'
 export const app = express()
 
 app.use(cors({
-  origin: true,
+  origin: "*",
   credentials: true,
 }))
 
