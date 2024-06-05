@@ -4,13 +4,16 @@ import { isSameMonth } from 'date-fns'
 
 interface MetricOnMonthsProps {
   activies: string
-  sumOfLitersOfAlcool: number
-  sumOfLitersOfGlueFilm: number
+  sumOfMinilitersOfAlcool: number
+  sumOfMinilitersOfFinalTrim: number
+  sumOfMinilitersOfDoubleSidedGlue: number
   totalOfPiecesOfAlcool: number
-  totalOfPiecesOfGlueFilm: number
+  totalOfPiecesOfFinalTrim: number
+  totalOfPiecesOfDoubleSidedGlue: number
   date: Date
   totalRecordsOfAlcool: number
-  totalRecordsOfGlueFilm: number
+  totalRecordsOfFinalTrim: number
+  totalRecordsOfDoubleSidedGlue: number
 }
 
 const isAlcoolActive = (activies: string) => {
@@ -21,7 +24,15 @@ const isAlcoolActive = (activies: string) => {
   return false
 }
 
-const isGlueFilmActive = (activies: string) => {
+const isDoubleSidedGlue = (activies: string) => {
+  if (activies.includes('6')) {
+    return true
+  }
+
+  return false
+}
+
+const isFinalTrimActive = (activies: string) => {
   if (activies.includes('3')) {
     return true
   }
@@ -32,14 +43,17 @@ const isGlueFilmActive = (activies: string) => {
 function formatReturnOnProductions(production: MetricOnMonthsProps) {
   return {
     id: randomUUID(),
-    sumOfLitersOfAlcool: production.sumOfLitersOfAlcool,
-    sumOfLitersOfGlueFilm: production.sumOfLitersOfGlueFilm,
+    sumOfMinilitersOfAlcool: production.sumOfMinilitersOfAlcool,
+    sumOfMinilitersOfFinalTrim: production.sumOfMinilitersOfFinalTrim,
+    sumOfMinilitersOfDoubleSidedGlue: production.sumOfMinilitersOfDoubleSidedGlue,
     totalOfPiecesOfAlcool: production.totalOfPiecesOfAlcool,
-    totalOfPiecesOfGlueFilm: production.totalOfPiecesOfGlueFilm,
+    totalOfPiecesOfFinalTrim: production.totalOfPiecesOfFinalTrim,
+    totalOfPiecesOfDoubleSidedGlue: production.totalOfPiecesOfDoubleSidedGlue,
     month: production.date.getMonth() + 1,
     year: production.date.getFullYear(),
     totalRecordsOfAlcool: production.totalRecordsOfAlcool,
-    totalRecordsOfGlueFilm: production.totalRecordsOfGlueFilm,
+    totalRecordsOfFinalTrim: production.totalRecordsOfFinalTrim,
+    totalRecordsOfDoubleSidedGlue: production.totalRecordsOfDoubleSidedGlue,
   }
 }
 
@@ -52,17 +66,25 @@ export function formatProductions(productions: Production[]) {
     for (let j = 0; j < metricsOnMonths.length; j++) {
       if (isSameMonth(metricsOnMonths[j].date, productions[i].realizedIn)) {
         if (isAlcoolActive(productions[i].activities)) { 
-          metricsOnMonths[j].sumOfLitersOfAlcool += productions[i].litersOfProduct;
-          metricsOnMonths[j].totalOfPiecesOfAlcool += productions[i].quantityProduced
+          metricsOnMonths[j].sumOfMinilitersOfAlcool += productions[i].minilitersOfAlcool
+          metricsOnMonths[j].totalOfPiecesOfAlcool += productions[i].quantityProducedOnAlcool
           metricsOnMonths[j].totalRecordsOfAlcool++;
           found = true;
           break;
         }
 
-        if (isGlueFilmActive(productions[i].activities)) {        
-          metricsOnMonths[j].sumOfLitersOfGlueFilm += productions[i].litersOfProduct;
-          metricsOnMonths[j].totalOfPiecesOfGlueFilm += productions[i].quantityProduced
-          metricsOnMonths[j].totalRecordsOfGlueFilm++;
+        if (isDoubleSidedGlue(productions[i].activities)) {
+          metricsOnMonths[j].sumOfMinilitersOfDoubleSidedGlue += productions[i].minilitersOfDoubleSidedGlue
+          metricsOnMonths[j].totalOfPiecesOfDoubleSidedGlue += productions[i].quantityProducedOnSidedGlue
+          metricsOnMonths[j].totalRecordsOfDoubleSidedGlue++;
+          found = true;
+          break;
+        }
+
+        if (isFinalTrimActive(productions[i].activities)) {        
+          metricsOnMonths[j].sumOfMinilitersOfFinalTrim += productions[i].minilitersOfFinalTrim
+          metricsOnMonths[j].totalOfPiecesOfFinalTrim += productions[i].quantityProducedOnFinalTrim
+          metricsOnMonths[j].totalRecordsOfFinalTrim++;
           found = true;
           break;
         }
@@ -73,26 +95,48 @@ export function formatProductions(productions: Production[]) {
       if (isAlcoolActive(productions[i].activities)) {
         metricsOnMonths.push({
           activies: productions[i].activities,
-          sumOfLitersOfAlcool: productions[i].litersOfProduct,
-          sumOfLitersOfGlueFilm: 0,
-          totalOfPiecesOfAlcool: productions[i].quantityProduced,
-          totalOfPiecesOfGlueFilm: 0,
+          sumOfMinilitersOfAlcool: productions[i].minilitersOfAlcool,
+          sumOfMinilitersOfFinalTrim: 0,
+          sumOfMinilitersOfDoubleSidedGlue: 0,
+          totalOfPiecesOfAlcool: productions[i].quantityProducedOnAlcool,
+          totalOfPiecesOfFinalTrim: 0,
+          totalOfPiecesOfDoubleSidedGlue: 0,
           date: productions[i].realizedIn,
           totalRecordsOfAlcool: 1,
-          totalRecordsOfGlueFilm: 0,
+          totalRecordsOfFinalTrim: 0,
+          totalRecordsOfDoubleSidedGlue: 0,
         })
       }
 
-      if (isGlueFilmActive(productions[i].activities)) {
+      if (isDoubleSidedGlue(productions[i].activities)) {
         metricsOnMonths.push({
           activies: productions[i].activities,
-          sumOfLitersOfAlcool: 0,
-          sumOfLitersOfGlueFilm: productions[i].litersOfProduct,
+          sumOfMinilitersOfAlcool: 0,
+          sumOfMinilitersOfDoubleSidedGlue: productions[i].minilitersOfDoubleSidedGlue,
+          sumOfMinilitersOfFinalTrim: 0,
           totalOfPiecesOfAlcool: 0,
-          totalOfPiecesOfGlueFilm: productions[i].quantityProduced,
+          totalOfPiecesOfDoubleSidedGlue: productions[i].quantityProducedOnSidedGlue,
+          totalOfPiecesOfFinalTrim: 0,
           date: productions[i].realizedIn,
           totalRecordsOfAlcool: 0,
-          totalRecordsOfGlueFilm: 1,
+          totalRecordsOfFinalTrim: 0,
+          totalRecordsOfDoubleSidedGlue: 1,
+        })
+      }
+
+      if (isFinalTrimActive(productions[i].activities)) {
+        metricsOnMonths.push({
+          activies: productions[i].activities,
+          sumOfMinilitersOfAlcool: 0,
+          sumOfMinilitersOfDoubleSidedGlue: 0,
+          sumOfMinilitersOfFinalTrim: productions[i].minilitersOfFinalTrim,
+          totalOfPiecesOfAlcool: 0,
+          totalRecordsOfDoubleSidedGlue: 0,
+          totalOfPiecesOfFinalTrim: productions[i].quantityProducedOnFinalTrim,
+          date: productions[i].realizedIn,
+          totalRecordsOfAlcool: 0,
+          totalRecordsOfFinalTrim: 1,
+          totalOfPiecesOfDoubleSidedGlue: 0,
         })
       }
     }

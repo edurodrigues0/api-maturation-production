@@ -22,9 +22,9 @@ describe("[e2e] Get Production", () => {
 
     const production = await prisma.production.create({
       data: {
-        activities: '1,2,3',
-        litersOfProduct: 3000,
-        quantityProduced: 600,
+        activities: '1,2,7',
+        minilitersOfAlcool: 3000,
+        quantityProducedOnAlcool: 600,
         realizedIn: "2024-05-24T00:00:00.000Z",
         colaboratorId: 1166,
       }

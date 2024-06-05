@@ -11,13 +11,26 @@ export async function editProduction(request: Request, response: Response) {
   
   const editProductionBodySchema = z.object({
     activitiesArray: z.array(z.string()).optional(),
-    litersOfProduct: z.number().positive().max(60).optional(),
-    quantityProduced: z.number().int().positive().optional(),
+    minilitersOfFinalTrim: z.number().int().max(60000).default(0),      
+    minilitersOfDoubleSidedGlue: z.number().int().max(60000).default(0),
+    minilitersOfAlcool: z.number().int().max(60000).default(0),
+    quantityProducedOnAlcool: z.number().int().default(0),
+    quantityProducedOnSidedGlue: z.number().int().default(0),
+    quantityProducedOnFinalTrim: z.number().int().default(0),
     realizedIn: z.preprocess((arg) => new Date(arg as string), z.date()).optional()
   })
 
   const { productionId } = editProductionParamsSchema.parse(request.params)
-  const { activitiesArray, litersOfProduct, quantityProduced, realizedIn } = editProductionBodySchema.parse(request.body)
+  const { 
+    activitiesArray,
+    minilitersOfAlcool,
+    minilitersOfDoubleSidedGlue,
+    minilitersOfFinalTrim,
+    quantityProducedOnAlcool,
+    quantityProducedOnFinalTrim,
+    quantityProducedOnSidedGlue,
+    realizedIn,
+  } = editProductionBodySchema.parse(request.body)
   const { edit, findById } = PrismaProductionsRepository()
 
   const production = await findById(productionId)
@@ -28,8 +41,12 @@ export async function editProduction(request: Request, response: Response) {
 
   await edit(productionId, {
     activities: activitiesArray?.join(','),
-    litersOfProduct,
-    quantityProduced,
+    minilitersOfAlcool,
+    minilitersOfDoubleSidedGlue,
+    minilitersOfFinalTrim,
+    quantityProducedOnAlcool,
+    quantityProducedOnFinalTrim,
+    quantityProducedOnSidedGlue,
     realizedIn
   })
 

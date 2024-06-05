@@ -6,7 +6,8 @@ import { MetricsRepository, Consume } from '../metrics'
 
 export const PrismaMetricsRepository = (): MetricsRepository => {
   const activieNumberAcool = '7'
-  const activieNumberGlueFilm = '3'
+  const activieNumberFinalTrim = '3'
+  const activieNumberDoubleSidedGlue = '6'
 
   return {
     async consumeOnLastDay(): Promise<Consume> {
@@ -22,9 +23,6 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
 
       const productions = await prisma.production.findMany({
         where: {
-          litersOfProduct: {
-            gte: 1
-          },
           realizedIn: {
             gte: startOfYesterday,
             lte: endOfYesterday,
@@ -37,7 +35,12 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
             },
             {
               activities: {
-                contains: activieNumberGlueFilm
+                contains: activieNumberFinalTrim
+              }
+            },
+            {
+              activities: {
+                contains: activieNumberDoubleSidedGlue
               }
             }
           ]
@@ -61,9 +64,6 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
 
       const productions = await prisma.production.findMany({
         where: {
-          litersOfProduct: {
-            gte: 1
-          },
           realizedIn: {
             gte: firstDayOfMonth,
             lte: lastDayOfMonth,
@@ -83,9 +83,6 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
 
       const productions = await prisma.production.findMany({
         where: {
-          litersOfProduct: {
-            gte: 1
-          },
           realizedIn: {
             gte: lastSixMonths,
             lte: currentDate
@@ -108,9 +105,6 @@ export const PrismaMetricsRepository = (): MetricsRepository => {
 
       const productions = await prisma.production.findMany({
         where: {
-          litersOfProduct: {
-            gte: 1
-          },
           realizedIn: {
             gte: lastSixMonths,
             lte: currentDate

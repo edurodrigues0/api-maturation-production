@@ -19,16 +19,20 @@ describe("[e2e] Create Production", () => {
 
     const response = await request(app).post('/productions').send({
       colaboratorId: 1166,
-      activitiesArray: ['1', '2'],
-      litersOfProduct: 10,
-      quantityProduced: 1008,
+      activitiesArray: ['1', '7'],
+      minilitersOfAlcool: 4000,
+      minilitersOfDoubleSidedGlue: 0,
+      minilitersOfFinalTrim: 0,
+      quantityProducedOnAlcool: 1080,
+      quantityProducedOnFinalTrim: 0,
+      quantityProducedOnSidedGlue: 0,
       realizedIn: "2024-05-23T00:00:00.000Z"
     })
 
     const productionOnDatabase = await prisma.production.findFirst({
       where: {
         colaboratorId: 1166,
-        quantityProduced: 1008,
+        quantityProducedOnAlcool: 1080,
       }
     })
 

@@ -36,14 +36,19 @@ model Admin {
 }
 
 model Production {
-  id               Int       @id @default(autoincrement())
-  activities       String
-  litersOfProduct  Int
-  quantityProduced Int
-  realizedIn       DateTime
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime? @updatedAt()
-  colaboratorId    Int
+  id                          Int       @id @default(autoincrement())
+  activities                  String
+  minilitersOfFinalTrim       Int       @default(0)
+  minilitersOfDoubleSidedGlue Int       @default(0)
+  minilitersOfAlcool          Int       @default(0)
+  quantityProducedOnAlcool    Int       @default(0)
+  quantityProducedOnSidedGlue Int       @default(0)
+  quantityProducedOnFinalTrim Int       @default(0)
+  realizedIn                  DateTime
+  createdAt                   DateTime  @default(now())
+  updatedAt                   DateTime? @updatedAt()
+  observation                 String?
+  colaboratorId               Int
 
   colaborator Colaborator @relation(fields: [colaboratorId], references: [id])
 

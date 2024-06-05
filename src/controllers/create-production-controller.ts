@@ -7,8 +7,12 @@ import { PrismaProductionsRepository } from '../repositories/prisma/productions-
 
 export async function createProduction(request: Request, response: Response) {
   const createProductionBodySchema = z.object({
-    quantityProduced: z.number().int(),
-    litersOfProduct: z.number().max(60),
+    minilitersOfFinalTrim: z.number().int().max(60000).default(0),      
+    minilitersOfDoubleSidedGlue: z.number().int().max(60000).default(0),
+    minilitersOfAlcool: z.number().int().max(60000).default(0),
+    quantityProducedOnAlcool: z.number().int().default(0),
+    quantityProducedOnSidedGlue: z.number().int().default(0),
+    quantityProducedOnFinalTrim: z.number().int().default(0),
     realizedIn: z.preprocess((arg) => new Date(arg as string), z.date()),
     activitiesArray: z.array(z.string()),
     colaboratorId: z.number().int().positive().min(3),
@@ -17,16 +21,18 @@ export async function createProduction(request: Request, response: Response) {
   const { 
     colaboratorId,
     activitiesArray,
-    litersOfProduct,
-    quantityProduced,
+    minilitersOfAlcool,
+    minilitersOfDoubleSidedGlue,
+    minilitersOfFinalTrim,
+    quantityProducedOnAlcool,
+    quantityProducedOnFinalTrim,
+    quantityProducedOnSidedGlue,
     realizedIn,
   } = createProductionBodySchema.parse(request.body)
   const { findById } = PrismaColaboratorsRepository()
   const { create, findByDate } = PrismaProductionsRepository()
 
   const activities = activitiesArray.join(',')
-  const quantityInMilliliter = litersOfProduct * 1000 // 1 Liter x 1.000 = 1.000ml
-
   const currentDate = new Date()
 
   const startOfDay = new Date(realizedIn)
@@ -54,8 +60,12 @@ export async function createProduction(request: Request, response: Response) {
   const production = await create({
     colaboratorId,
     activities,
-    litersOfProduct: quantityInMilliliter,
-    quantityProduced,
+    minilitersOfAlcool,
+    minilitersOfDoubleSidedGlue,
+    minilitersOfFinalTrim,
+    quantityProducedOnAlcool,
+    quantityProducedOnFinalTrim,
+    quantityProducedOnSidedGlue,
     realizedIn,
   })
 

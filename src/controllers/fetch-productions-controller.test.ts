@@ -23,8 +23,8 @@ describe("[e2e] Fetch Productions", () => {
     await prisma.production.create({
       data: {
         activities: '1,2,3',
-        litersOfProduct: 1000,
-        quantityProduced: 600,
+        minilitersOfAlcool: 6000,
+        quantityProducedOnAlcool: 1000,
         realizedIn: "2024-05-23T00:00:00.000Z",
         colaboratorId: 1166,
       },
@@ -33,8 +33,8 @@ describe("[e2e] Fetch Productions", () => {
     await prisma.production.create({
       data: {
         activities: '1,2,3',
-        litersOfProduct: 1000,
-        quantityProduced: 600,
+        minilitersOfAlcool: 6000,
+        quantityProducedOnAlcool: 1000,
         realizedIn: "2024-05-24T00:00:00.000Z",
         colaboratorId: 1166,
       },

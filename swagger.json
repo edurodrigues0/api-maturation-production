@@ -521,12 +521,32 @@
             "description": "this is a activities on sector code",
             "example": ["1","2","3"]
           },
-          "litersOfProduct": {
+          "minilitersOfAlcool": {
             "type": "number",
-            "description": "This is the number of products spent in liters",
-            "example": 9
+            "description": "This is the number of products spent in miniliters",
+            "example": 9000
           },
-          "quantityProduced": {
+          "minilitersOfDoubleSidedGlue": {
+            "type": "number",
+            "description": "This is the number of products spent in miniliters",
+            "example": 9000
+          },
+          "minilitersOfFinalTrim": {
+            "type": "number",
+            "description": "This is the number of products spent in miniliters",
+            "example": 9000
+          },
+          "quantityProducedOnAlcool": {
+            "type": "number",
+            "description": "Quantity produced by quantity liters",
+            "example": 1080
+          },
+          "quantityProducedOnFinalTrim": {
+            "type": "number",
+            "description": "Quantity produced by quantity liters",
+            "example": 1080
+          },
+          "quantityProducedOnSidedGlue": {
             "type": "number",
             "description": "Quantity produced by quantity liters",
             "example": 1080
@@ -549,12 +569,32 @@
             "description": "this is a activities on sector code",
             "example": ["1","2","3"]
           },
-          "litersOfProduct": {
+          "minilitersOfAlcool": {
             "type": "number",
-            "description": "This is the number of products spent in liters",
-            "example": 9
+            "description": "This is the number of products spent in miniliters",
+            "example": 9000
           },
-          "quantityProduced": {
+          "minilitersOfDoubleSidedGlue": {
+            "type": "number",
+            "description": "This is the number of products spent in miniliters",
+            "example": 9000
+          },
+          "minilitersOfFinalTrim": {
+            "type": "number",
+            "description": "This is the number of products spent in miniliters",
+            "example": 9000
+          },
+          "quantityProducedOnAlcool": {
+            "type": "number",
+            "description": "Quantity produced by quantity liters",
+            "example": 1080
+          },
+          "quantityProducedOnFinalTrim": {
+            "type": "number",
+            "description": "Quantity produced by quantity liters",
+            "example": 1080
+          },
+          "quantityProducedOnSidedGlue": {
             "type": "number",
             "description": "Quantity produced by quantity liters",
             "example": 1080

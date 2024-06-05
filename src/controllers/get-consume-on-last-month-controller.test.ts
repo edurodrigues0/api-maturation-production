@@ -29,8 +29,8 @@ describe("[e2e] Metrics on last month", () => {
     await prisma.production.create({
       data: {
         activities: '1,2,3',
-        litersOfProduct: 10000,
-        quantityProduced: 600,
+        minilitersOfFinalTrim: 10000,
+        quantityProducedOnFinalTrim: 600,
         realizedIn: currentDate,
         colaboratorId: 1166,
       },
@@ -39,8 +39,8 @@ describe("[e2e] Metrics on last month", () => {
     await prisma.production.create({
       data: {
         activities: '1,2,7',
-        litersOfProduct: 10000,
-        quantityProduced: 600,
+        minilitersOfAlcool: 10000,
+        quantityProducedOnAlcool: 600,
         realizedIn: lastMonth,
         colaboratorId: 1166,
       },
@@ -49,8 +49,8 @@ describe("[e2e] Metrics on last month", () => {
     await prisma.production.create({
       data: {
         activities: '1,2,3',
-        litersOfProduct: 4000,
-        quantityProduced: 600,
+        minilitersOfFinalTrim: 4000,
+        quantityProducedOnFinalTrim: 600,
         realizedIn: lastMonth,
         colaboratorId: 1166,
       },
@@ -65,14 +65,14 @@ describe("[e2e] Metrics on last month", () => {
 
     expect(response.statusCode).toEqual(200)
     expect(metricsOnLastMonth).toEqual(expect.objectContaining({
-      sumOfLitersOfAlcool: 10000,
-      sumOfLitersOfGlueFilm: 4000,
+      sumOfMinilitersOfAlcool: 10000,
+      sumOfMinilitersOfFinalTrim: 4000,
       totalOfPiecesOfAlcool: 600,
-      totalOfPiecesOfGlueFilm: 600,
+      totalOfPiecesOfFinalTrim: 600,
       month,
       year,
       totalRecordsOfAlcool: 1,
-      totalRecordsOfGlueFilm: 1,
+      totalRecordsOfFinalTrim: 1,
     }))
   })
 })

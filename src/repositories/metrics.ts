@@ -1,13 +1,16 @@
 export interface Consume {
   id: string;
-  sumOfLitersOfAlcool: number;
-  sumOfLitersOfGlueFilm: number;
-  totalOfPiecesOfAlcool: number;
-  totalOfPiecesOfGlueFilm: number;
-  month: number;
-  year: number;
-  totalRecordsOfAlcool: number;
-  totalRecordsOfGlueFilm: number;
+  sumOfMinilitersOfAlcool: number
+  sumOfMinilitersOfFinalTrim: number
+  sumOfMinilitersOfDoubleSidedGlue: number
+  totalOfPiecesOfAlcool: number
+  totalOfPiecesOfFinalTrim: number
+  totalOfPiecesOfDoubleSidedGlue: number
+  month: number
+  year: number
+  totalRecordsOfAlcool: number
+  totalRecordsOfGlueFilm: number
+  totalRecordsOfDoubleSidedGlue: number
 }
 
 export interface MetricsRepository {

@@ -23,8 +23,12 @@ describe("[e2e] Edit Production", () => {
     const production = await prisma.production.create({
       data: {
         activities: '1,2,3',
-        litersOfProduct: 9000,
-        quantityProduced: 1008,
+        minilitersOfAlcool: 9000,
+        minilitersOfDoubleSidedGlue: 0,
+        minilitersOfFinalTrim: 0,
+        quantityProducedOnAlcool: 1080,
+        quantityProducedOnFinalTrim: 0,
+        quantityProducedOnSidedGlue: 0,
         realizedIn: '2024-05-23T00:00:00.000Z',
         colaboratorId: 1166
       }
@@ -35,12 +39,14 @@ describe("[e2e] Edit Production", () => {
     .set('Authorization', `Bearer ${token}`)
     .send({
       activities: ['1', '3', '5', '7'],
-      quantityProduced: 600
+      minilitersOfAlcool: 6000,
+      quantityProducedOnAlcool: 1200
     })
 
     const productionEditedInDatabase = await prisma.production.findFirst({
       where: {
-        quantityProduced: 600,
+        minilitersOfAlcool: 6000,
+        quantityProducedOnAlcool: 1200
       }
     })
 

@@ -26,9 +26,9 @@ describe("[e2e] Metrics on last six months", () => {
     for (let i = 0; i < 6; i++) {
       await prisma.production.create({
         data: {
-          activities: '1,2,3',
-          litersOfProduct: 4000,
-          quantityProduced: 600,
+          activities: '1,2,7',
+          minilitersOfAlcool: 4000,
+          quantityProducedOnAlcool: 600,
           realizedIn: subMonths(currentDate, i),
           colaboratorId: 1166,
         },
