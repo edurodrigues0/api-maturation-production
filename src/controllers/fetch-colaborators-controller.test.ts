@@ -14,7 +14,7 @@ describe("[e2e] Fetch Colaborator", () => {
   test('[GET] /colaborators/', async () => {
     const { token } = await createAndAuthenticate(app)
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 12; i++) {
       await prisma.colaborator.create({
         data: {
           id: 1166+i,
@@ -24,7 +24,7 @@ describe("[e2e] Fetch Colaborator", () => {
     }
 
     const response = await request(app)
-    .get(`/colaborators?page=1`)
+    .get(`/colaborators?page=2`)
     .set('Authorization', `Bearer ${token}`)
     .send()
 
