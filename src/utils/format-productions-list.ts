@@ -2,7 +2,7 @@ import { Production } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 import { isSameMonth } from 'date-fns'
 
-interface MetricOnMonthsProps {
+type MetricOnMonthsProps = {
   activies: string
   sumOfMinilitersOfAlcool: number
   sumOfMinilitersOfFinalTrim: number
@@ -11,33 +11,18 @@ interface MetricOnMonthsProps {
   totalOfPiecesOfFinalTrim: number
   totalOfPiecesOfDoubleSidedGlue: number
   date: Date
-  totalRecordsOfAlcool: number
-  totalRecordsOfFinalTrim: number
-  totalRecordsOfDoubleSidedGlue: number
 }
 
 const isAlcoolActive = (activies: string) => {
-  if (activies.includes('7')) {
-    return true
-  }
-
-  return false
+  return activies.includes('7')
 }
 
-const isDoubleSidedGlue = (activies: string) => {
-  if (activies.includes('6')) {
-    return true
-  }
-
-  return false
+const isDoubleSidedGlueActive = (activies: string) => {
+  return activies.includes('6')
 }
 
 const isFinalTrimActive = (activies: string) => {
-  if (activies.includes('3')) {
-    return true
-  }
-  
-  return false
+  return activies.includes('3')
 }
 
 function formatReturnOnProductions(production: MetricOnMonthsProps) {
@@ -51,9 +36,6 @@ function formatReturnOnProductions(production: MetricOnMonthsProps) {
     totalOfPiecesOfDoubleSidedGlue: production.totalOfPiecesOfDoubleSidedGlue,
     month: production.date.getMonth() + 1,
     year: production.date.getFullYear(),
-    totalRecordsOfAlcool: production.totalRecordsOfAlcool,
-    totalRecordsOfFinalTrim: production.totalRecordsOfFinalTrim,
-    totalRecordsOfDoubleSidedGlue: production.totalRecordsOfDoubleSidedGlue,
   }
 }
 
@@ -68,77 +50,35 @@ export function formatProductions(productions: Production[]) {
         if (isAlcoolActive(productions[i].activities)) { 
           metricsOnMonths[j].sumOfMinilitersOfAlcool += productions[i].minilitersOfAlcool
           metricsOnMonths[j].totalOfPiecesOfAlcool += productions[i].quantityProducedOnAlcool
-          metricsOnMonths[j].totalRecordsOfAlcool++;
-          found = true;
-          break;
         }
 
-        if (isDoubleSidedGlue(productions[i].activities)) {
+        if (isDoubleSidedGlueActive(productions[i].activities)) {
           metricsOnMonths[j].sumOfMinilitersOfDoubleSidedGlue += productions[i].minilitersOfDoubleSidedGlue
           metricsOnMonths[j].totalOfPiecesOfDoubleSidedGlue += productions[i].quantityProducedOnSidedGlue
-          metricsOnMonths[j].totalRecordsOfDoubleSidedGlue++;
-          found = true;
-          break;
         }
 
         if (isFinalTrimActive(productions[i].activities)) {        
           metricsOnMonths[j].sumOfMinilitersOfFinalTrim += productions[i].minilitersOfFinalTrim
           metricsOnMonths[j].totalOfPiecesOfFinalTrim += productions[i].quantityProducedOnFinalTrim
-          metricsOnMonths[j].totalRecordsOfFinalTrim++;
-          found = true;
-          break;
         }
+
+        found = true;
       }
     }
 
     if (!found) {
-      if (isAlcoolActive(productions[i].activities)) {
-        metricsOnMonths.push({
-          activies: productions[i].activities,
-          sumOfMinilitersOfAlcool: productions[i].minilitersOfAlcool,
-          sumOfMinilitersOfFinalTrim: 0,
-          sumOfMinilitersOfDoubleSidedGlue: 0,
-          totalOfPiecesOfAlcool: productions[i].quantityProducedOnAlcool,
-          totalOfPiecesOfFinalTrim: 0,
-          totalOfPiecesOfDoubleSidedGlue: 0,
-          date: productions[i].realizedIn,
-          totalRecordsOfAlcool: 1,
-          totalRecordsOfFinalTrim: 0,
-          totalRecordsOfDoubleSidedGlue: 0,
-        })
+      const newMetric: MetricOnMonthsProps = {
+        activies: productions[i].activities,
+        sumOfMinilitersOfAlcool: isAlcoolActive(productions[i].activities) ? productions[i].minilitersOfAlcool : 0,
+        sumOfMinilitersOfDoubleSidedGlue: isDoubleSidedGlueActive(productions[i].activities) ? productions[i].minilitersOfDoubleSidedGlue : 0,
+        sumOfMinilitersOfFinalTrim: isFinalTrimActive(productions[i].activities) ? productions[i].minilitersOfFinalTrim : 0,
+        totalOfPiecesOfAlcool: isAlcoolActive(productions[i].activities) ? productions[i].quantityProducedOnAlcool : 0,
+        totalOfPiecesOfDoubleSidedGlue: isDoubleSidedGlueActive(productions[i].activities) ? productions[i].quantityProducedOnSidedGlue : 0,
+        totalOfPiecesOfFinalTrim: isFinalTrimActive(productions[i].activities) ? productions[i].quantityProducedOnFinalTrim : 0,
+        date: productions[i].realizedIn,
       }
 
-      if (isDoubleSidedGlue(productions[i].activities)) {
-        metricsOnMonths.push({
-          activies: productions[i].activities,
-          sumOfMinilitersOfAlcool: 0,
-          sumOfMinilitersOfDoubleSidedGlue: productions[i].minilitersOfDoubleSidedGlue,
-          sumOfMinilitersOfFinalTrim: 0,
-          totalOfPiecesOfAlcool: 0,
-          totalOfPiecesOfDoubleSidedGlue: productions[i].quantityProducedOnSidedGlue,
-          totalOfPiecesOfFinalTrim: 0,
-          date: productions[i].realizedIn,
-          totalRecordsOfAlcool: 0,
-          totalRecordsOfFinalTrim: 0,
-          totalRecordsOfDoubleSidedGlue: 1,
-        })
-      }
-
-      if (isFinalTrimActive(productions[i].activities)) {
-        metricsOnMonths.push({
-          activies: productions[i].activities,
-          sumOfMinilitersOfAlcool: 0,
-          sumOfMinilitersOfDoubleSidedGlue: 0,
-          sumOfMinilitersOfFinalTrim: productions[i].minilitersOfFinalTrim,
-          totalOfPiecesOfAlcool: 0,
-          totalRecordsOfDoubleSidedGlue: 0,
-          totalOfPiecesOfFinalTrim: productions[i].quantityProducedOnFinalTrim,
-          date: productions[i].realizedIn,
-          totalRecordsOfAlcool: 0,
-          totalRecordsOfFinalTrim: 1,
-          totalOfPiecesOfDoubleSidedGlue: 0,
-        })
-      }
+      metricsOnMonths.push(newMetric)
     }
   }
   
